@@ -29,7 +29,8 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        trim: true
+        trim: true,
+
     },
 
     address : {
@@ -57,7 +58,9 @@ const userSchema = mongoose.Schema({
         minlength: 6
         
 
-    }
+    },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
 });
 
 const user = mongoose.model('User', userSchema);

@@ -10,6 +10,7 @@ const bcrypt = require('bcrypt');
 const auth = require('../auth/auth');
 const Ville = require('../models/ville.model');
 const resa = require('../models/resa.model');
+const axios = require('axios');
 
 
 
@@ -44,12 +45,15 @@ router.get("/Vehicules/:villeId", async (req, res) => {
 
 router.get("/BookingVille", async (req, res) => {
     try {
-        const ville =  await Ville.find();
-        res.status(200).json(ville);
+        const villes = await Ville.find();
+        // Ajouter une vérification pour s'assurer que les URLs des images sont correctes
+        
+        res.status(200).json(villes);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
+
 
 router.get("/Vehicules/disponibilite/:name", async (req, res) => {
     try {
@@ -80,6 +84,17 @@ router.get("/Vehicules/disponibilite/:name", async (req, res) => {
 
         // Sinon, le véhicule est disponible
         return res.status(200).json(vehicule);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
+router.get("/vehicule/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const vehicule = await Vehicule.findById(id);
+        res.status(200).json(vehicule);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -130,6 +145,8 @@ router.get("/Vehicules/priceperday/:id", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+
 
 
 

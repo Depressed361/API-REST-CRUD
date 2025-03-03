@@ -15,11 +15,12 @@ const ReservationSchema = new mongoose.Schema({
 
         required: true
     },
-    utilisateur: {
-        type: mongoose.Schema.Types.String,
-        ref: 'Utilisateur',
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
+  
     assurance: 
     {
         type: mongoose.Schema.Types.String,

@@ -7,6 +7,7 @@ const Vehicule = require('../models/post.model');
 const session = require('express-session');
 require('dotenv').config();
 const Assurance = require('../models/assurance.model');
+const multer = require('multer');
 
 const bcrypt = require('bcrypt');
 const auth = require('../auth/auth');

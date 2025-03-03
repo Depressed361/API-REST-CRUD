@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 5000;
 const connectDB = require('./config/database');
-const Vehicule = require ('../backend/models/post.model');
+const Vehicule = require ('./models/post.model');
 const dotenv = require('dotenv').config();
 const cors = require('cors');
 
@@ -10,8 +10,10 @@ const cors = require('cors');
 
 app.use(cors(
     {
-        origin: 'http://localhost:4200',
-        credentials: true
+        origin: /*'http://localhost:4200'*/'*',
+
+        credentials: true,
+        
     }
 ));
 
@@ -24,6 +26,7 @@ connectDB ();
  // middleware qui permet de parser les requêtes
 
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: false }));
 
  app.use('/post', require('./routes/post.routes'));
