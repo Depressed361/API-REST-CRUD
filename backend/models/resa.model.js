@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ReservationSchema = new mongoose.Schema({
+const ReservationSchema =  mongoose.Schema({
     vehicule: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Vehicule',
@@ -26,6 +26,12 @@ const ReservationSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.String,
         ref: 'assurance',
 
+    },
+
+    status: {
+        type: String,
+        enum: ['En attente', 'Confirmée', 'Annulée'],
+        default: 'En attente'
     }
 
 });
@@ -38,4 +44,8 @@ const ReservationSchema = new mongoose.Schema({
 
 });
 
-module.exports = mongoose.model('Reservation', ReservationSchema);
+
+
+const Reservation = mongoose.model('Reservation', ReservationSchema);
+
+module.exports = Reservation;

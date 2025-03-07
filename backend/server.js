@@ -33,6 +33,7 @@ app.use(express.urlencoded({ extended: false }));
  app.use('/user', require('./routes/login'));
  app.use('/admin', require('./routes/admin.crud'));
  app.use('/ville', require('./routes/ville.routes'));
+ app.use('/Assurances', require('./routes/assurance.route'));
 
 
  setInterval(async () => {

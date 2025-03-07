@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../auth/auth');
-const {createVehicule} = require('../models/post.model');
+
 const Vehicule = require('../models/post.model');
 const session = require('express-session');
 require('dotenv').config();
-const Assurance =require('../models/assurance.model');
+const assurance =require('../models/assurance.model');
 const User = require('../models/user.model');
 const bcrypt = require('bcrypt')
 const privateKey = require('../auth/private_key');
@@ -174,17 +174,7 @@ router.get ('/Getreservations/:id', auth, async (req, res) => {
     }
 });
 
-// get assurances
 
-
-router.get ('/GetAssurances', auth, async (req, res) => {
-    try {
-        const assurance = await Assurance.find ();
-        res.status(200).json(assurance);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
 
 
 

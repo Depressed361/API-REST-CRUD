@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
+
 //const {setPosts} = require('../controllers/post.controllers');
-const {createVehicule} = require('../models/post.model');
+const mongoose = require('mongoose');
 const Vehicule = require('../models/post.model');
 const session = require('express-session');
 require('dotenv').config();
@@ -9,8 +10,7 @@ const User = require('../models/user.model');
 const bcrypt = require('bcrypt');
 const auth = require('../auth/auth');
 const Ville = require('../models/ville.model');
-const resa = require('../models/resa.model');
-const axios = require('axios');
+const Reservation = require('../models/resa.model');
 
 
 
@@ -71,7 +71,7 @@ router.get("/Vehicules/disponibilite/:name", async (req, res) => {
         }
 
         // Rechercher les réservations qui se chevauchent avec l'intervalle de dates
-        const reservations = await resa.find({
+        const reservations = await Reservation.find({
             
             dateDebut: { $lt: fin },
             dateFin: { $gt: debut }
@@ -160,8 +160,50 @@ router.get('/Vehicules/:id', async (req, res) => {
  }
 });
 
-//router.post("/", setPosts);
+router.post("/reserve-and-pay", auth, async (req, res) => {
+    try {
+        const { vehiculeId, userId, dateDebut, dateFin, assurance } = req.body;
 
+        // Vérifier que toutes les informations nécessaires sont présentes
+        if (!vehiculeId || !userId || !dateDebut || !dateFin) {
+            return res.status(400).json({ message: "Toutes les informations sont requises" });
+        }
+
+        // Simuler le paiement
+        const paymentSuccess = true; // Vous pouvez remplacer cette ligne par une logique de paiement réelle
+
+        if (!paymentSuccess) {
+            return res.status(400).json({ message: "Le paiement a échoué" });
+        }
+
+        // Vérifier que le véhicule est disponible pour les dates spécifiées
+        const reservations = await Reservation.find({
+            vehicule: vehiculeId,
+            dateDebut: { $lt: new Date(dateFin) },
+            dateFin: { $gt: new Date(dateDebut) }
+        });
+
+        if (reservations.length > 0) {
+            return res.status(400).json({ message: "Le véhicule n'est pas disponible pour les dates spécifiées" });
+        }
+
+        // Créer la réservation
+        const reservation = new Reservation({
+            vehicule: new mongoose.Types.ObjectId(vehiculeId),
+            user: new mongoose.Types.ObjectId(userId),
+            dateDebut: new Date(dateDebut),
+            dateFin: new Date(dateFin),
+            assurance: assurance,
+            status: 'Confirmée'
+        });
+
+        await reservation.save();
+
+        res.status(201).json({ message: "Réservation et paiement réussis", reservation });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 
 module.exports = router;
