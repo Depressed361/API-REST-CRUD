@@ -1,7 +1,5 @@
 const express = require('express');
 const router = express.Router();
-
-//const {setPosts} = require('../controllers/post.controllers');
 const mongoose = require('mongoose');
 const Vehicule = require('../models/post.model');
 const session = require('express-session');
@@ -12,6 +10,9 @@ const auth = require('../auth/auth');
 const Ville = require('../models/ville.model');
 const Reservation = require('../models/resa.model');
 
+
+//post.routes route est le fichier contenant les routes des requetes concernant la reservations et les vehicules
+//meme si la route s'appelle post , elle contient des requetes post get put etc...
 
 
 

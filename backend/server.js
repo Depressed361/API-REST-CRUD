@@ -1,14 +1,14 @@
 const express = require('express');
-const app = express();
-const port = process.env.PORT || 5000;
 const connectDB = require('./config/database');
 const Vehicule = require ('./models/post.model');
-const dotenv = require('dotenv').config();
+const  dotenv = require('dotenv').config();// pour les variables d'environnement
 const cors = require('cors');
 const session = require('express-session');
 const privateKey = require('./auth/private_key');
 
 
+const app = express();
+const port =   process.env.PORT || 5000 ;
 app.use(cors(
     {
         origin: /*'http://localhost:4200'*/'*',
@@ -50,6 +50,10 @@ app.use (session({
  app.use('/ville', require('./routes/ville.routes'));
  app.use('/Assurances', require('./routes/assurance.route'));
 
+ app.get("/", (req, res) => {
+  res.json( "Hello Heroku" );
+}
+);
 
  setInterval(async () => {
   const now = new Date();
