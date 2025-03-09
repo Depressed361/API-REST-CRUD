@@ -15,18 +15,6 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
 
-router.use (session({
-   name : process.env.SESSION_NAME,
-   resave : false,
-    saveUninitialized : false,
-    secret : privateKey,
-    cookie : {
-    maxAge : 1000 * 60 * 60 * 2,
-        sameSite : true,
-        secure : process.env.NODE_ENV === 'production'
-    }
-
-}))
 
 
 //jwt

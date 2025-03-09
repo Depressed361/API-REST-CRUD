@@ -57,38 +57,42 @@ router.get("/BookingVille", async (req, res) => {
 
 router.get("/Vehicules/disponibilite/:name", async (req, res) => {
     try {
-        const {name}  = req.params;
+        const { name } = req.params;
         const { dateDebut, dateFin } = req.query;
 
         // Convertir les dates de début et de fin en objets Date
         const debut = new Date(dateDebut);
         const fin = new Date(dateFin);
 
-        // Rechercher le véhicule par ID de la ville qui est dans le modèle de véhicule
-        const vehicule = await Vehicule.find({ name: name  });
-        if (!vehicule) {
-            return res.status(404).json({ message: "Véhicule non trouvé" });
+        // Rechercher tous les véhicules dans la ville spécifiée
+        const vehicules = await Vehicule.find({ name: name }); // name est le nom de la ville dans le modèle de véhicule
+
+        if (!vehicules.length) {
+            return res.status(404).json({ message: "Aucun véhicule trouvé dans cette ville" });
         }
 
-        // Rechercher les réservations qui se chevauchent avec l'intervalle de dates
-        const reservations = await Reservation.find({
-            
-            dateDebut: { $lt: fin },
-            dateFin: { $gt: debut }
-        });
+        // Filtrer les véhicules disponibles
+        const vehiculesDisponibles = [];
 
-        // Si une réservation se chevauche, le véhicule n'est pas disponible
-        if (reservations.length > 0) {
-            return res.status(200).json({ disponible: false });
+        for (const vehicule of vehicules) {
+            const reservations = await Reservation.find({
+                vehicule: vehicule._id,
+                dateDebut: { $lt: fin },
+                dateFin: { $gt: debut }
+            });
+
+            // Si aucune réservation ne se chevauche, le véhicule est disponible
+            if (reservations.length === 0) {
+                vehiculesDisponibles.push(vehicule);
+            }
         }
 
-        // Sinon, le véhicule est disponible
-        return res.status(200).json(vehicule);
+        // Retourner les véhicules disponibles
+        res.status(200).json(vehiculesDisponibles);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
-
 
 router.get("/vehicule/:id", async (req, res) => {
     try {
